@@ -1,0 +1,32 @@
+library(dplyr) 
+library(raster)
+library(reshape2)
+library(rgl)
+
+DEM <- raster("gebco_bathy.tif")
+
+xyz <- rasterToPoints(DEM)
+
+bathy <- as.data.frame(xyz)
+rename(bathy, Depth =gebco_bathy) 
+
+batmat <- acast(bathy, x~y, value.var="gebco_bathy")
+
+Xaxis <- as.numeric(rownames(batmat))
+Yaxis <- as.numeric(colnames(batmat))
+
+colors_100 <- rev(rainbow(50))
+Depths_100_breaks  <- cut(batmat, 75)
+
+persp3d(x = Xaxis,
+        y = Yaxis,
+        z = batmat,
+        col = colors_100[Depths_100_breaks],
+        aspect = c(4,6,1),
+        xlab="", 
+        ylab="", 
+        axes=FALSE)
+par3d(cex = 0.7)
+axis3d("z--")
+axis3d("y++")
+axis3d("x-+")
