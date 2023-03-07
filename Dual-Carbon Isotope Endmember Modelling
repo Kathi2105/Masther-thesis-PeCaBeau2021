@@ -1,0 +1,59 @@
+library(ggplot2)
+library(tidyverse)
+library(corrplot)
+
+data <- read_excel("Isotope_0-2.xlsx")
+                                       
+
+data$group <- c("Amundsen Gulf", "Amundsen Gulf", "Amundsen Gulf",
+                      "Behind Shlef Break", 
+                      "Beaufort Shelf","Beaufort Shelf","Beaufort Shelf","Beaufort Shelf",
+                      "Behind Shlef Break","Behind Shlef Break",
+                      "Mackenzie Delta","Mackenzie Delta", "Mackenzie Delta", "Mackenzie Delta",
+                      "Behind Shlef Break",
+                      "Mackenzie Delta","Mackenzie Delta",
+                      "Mackenzie Trough", "Mackenzie Trough",
+                      "Behind Shlef Break","Behind Shlef Break",
+                      "Yukon Coast", "Yukon Coast") 
+         
+cols <- c("#FF1F5B", "#00CD6C","#009ADE", "#AF58BA", "#FFC61E", "#F28522")
+
+COR = cor.test(data$D13C02, data$D15N02)[c("estimate","p.value")]
+COR_text = paste(c("R=","p="),signif(as.numeric(COR,3),3),collapse=", ")
+
+Plot13Cvs15N_Delta <- ggplot(data, aes(x= D13C02, y =D15N02))+
+  geom_smooth(method = lm, color = "black", fill ="lightgrey", se = TRUE)+
+  geom_point(aes(color = DTDgrouped, size = 4))+
+  theme_minimal()+
+  xlab("δ13C [‰]")+
+  ylab("δ15N [‰]")+
+  geom_text_repel(aes(label = PCB), size = 4)+
+  scale_color_manual(values = cols)
+
+COR = cor.test(data$D13C02, data$D15N02)[c("estimate","p.value")]
+COR_text = paste(c("R=","p="),signif(as.numeric(COR,3),3),collapse=", ")
+
+D13cvsCNplot <- ggplot(data, aes(x= D13C02, y = C_N02))+ 
+  geom_smooth(method = lm, color = "black", fill ="lightgrey", se = TRUE)+
+  geom_point(aes(color = group, size = 4))+
+  theme_minimal()+
+  xlab("δ13C [‰]")+
+  ylab("C/N ratio")+
+  geom_text_repel(aes(label = PCB), size = 4)+
+  theme(legend.position = "none")+
+  scale_color_manual(values = cols)+
+  geom_hline(yintercept = 6.625, linetype="dashed")
+  
+COR = cor.test(data$D13C02, data$Age02)[c("estimate","p.value")]
+COR_text = paste(c("R=","p="),signif(as.numeric(COR,3),3),collapse=", ")
+
+D13cvs14C <- ggplot(data, aes(x= D13C02, y =Age02))+ 
+  geom_smooth(method = lm, color = "black", fill ="lightgrey", se = TRUE)+
+  geom_point(aes(color = group, size = 4))+
+  theme_minimal()+
+  theme(legend.position = "none")+
+  xlab("δ13C [‰]")+
+  ylab("14C [BP]")+
+  geom_text_repel(aes(label = PCB), size = 4)+
+  scale_color_manual(values = cols)
+  
