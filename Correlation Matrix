@@ -1,0 +1,76 @@
+library(readxl)
+library(ggplot2)
+library(tidyverse)
+library(corrplot)
+
+data_mean <- read_excel("OverviewSheet_mean. xlsx")
+data_01 <- read_excel("OverviewSheet_0-1.xlsx")
+data_12 <- read_excel("OverviewSheet_1-2.xlsx")
+
+data_mean[, "GrainSize"]=round(data_mean[,"GrainSize"],2)
+data_mean[, "CN"]=round(data_mean[,"CN"],2)
+data_mean[, "D13C"]=round(data_mean[,"D13C"],2)
+data_mean[, "TOC"]=round(data_mean[,"TOC"],2)
+data_mean[, "TN"]=round(data_mean[,"TN"],2)
+data_mean[, "D15N"]=round(data_mean[,"D15N"],2)
+
+data_01[, "GrainSize"]=round(data_01[,"GrainSize"],2)
+data_01[, "CN"]=round(data_01[,"CN"],2)
+data_01[, "D13C"]=round(data_01[,"D13C"],2)
+data_01[, "TOC"]=round(data_01[,"TOC"],2)
+data_01[, "TN"]=round(data_01[,"TN"],2)
+data_01[, "D15N"]=round(data_01[,"D15N"],2)
+
+data_12[, "GrainSize"]=round(data_12[,"GrainSize"],2)
+data_12[, "CN"]=round(data_12[,"CN"],2)
+data_12[, "D13C"]=round(data_12[,"D13C"],2)
+data_12[, "TOC"]=round(data_12[,"TOC"],2)
+data_12[, "TN"]=round(data_12[,"TN"],2)
+data_12[, "D15N"]=round(data_12[,"D15N"],2)
+
+colnames(data_mean) <- c("Distance to Coast", "Distance to Delta","Water Depth",
+                       "Grain Size", "TOC", "TN", "δ15N", "Hg", 
+                       "δ13C", "C/N ratio", "Age")
+
+colnames(data_01) <- c("Distance to Coast", "Distance to Delta","Water Depth",
+                       "Grain Size", "TOC", "TN", "δ15N", "Hg", 
+                       "δ13C", "C/N ratio", "Age")
+
+
+colnames(data_12) <- c("Distance to Coast", "Distance to Delta","Water Depth",
+                       "Grain Size", "TOC", T"N", "δ15N", "Hg", 
+                       "δ13C", "C/N ratio", "Age")
+
+#Correlation of mean values####
+
+cormean <- cor(data_mean)
+corrplot(cor01, method = "color", addCoef.col = "black", order = "alphabet", 
+         diag = FALSE, cl.pos = "b", type = "lower", tl.col = "black",  
+         tl.srt = 59, number.cex = 0.7)
+
+
+#Remove Outliers PCB5_22
+data_mean <- data_mean[-c(5),]
+data_mean <- data_mean[-c(21),]
+
+#Correlation of 0-1cm values####
+
+cor01 <- cor(data_01)
+corrplot(cor01, method = "color", addCoef.col = "black", order = "alphabet", 
+         diag = FALSE, cl.pos = "b", type = "lower", tl.col = "black",  
+         tl.srt = 59, number.cex = 0.7)
+
+#Remove Outliers PCB5_22
+data_01 <- data_01[-c(5),]
+data_01 <- data_01[-c(21),]
+
+#Correlation of 1-2cm values####
+
+cor12 <- cor(data_12)
+corrplot(cor12, method = "color", addCoef.col = "black", order = "alphabet", 
+         diag = FALSE, cl.pos = "b", type = "lower", tl.col = "black",  
+         tl.srt = 59, number.cex = 0.7)
+
+#Remove Outliers PCB5_22
+data_12 <- data_12[-c(5),]
+data_12 <- data_12[-c(21),]
